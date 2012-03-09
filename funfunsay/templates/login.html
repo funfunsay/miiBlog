@@ -1,0 +1,24 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+{% extends "layout.html" %}
+{% block title %}Sign In{% endblock %}
+{% block body %}
+<div class='span12'>
+    <form class='form-stacked' method="POST" action="{{ url_for('homesite.login') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <fieldset>
+            <legend>Not a member? <a href="{{ url_for('homesite.register') }}">Sign up</a> please.</legend>
+            {{ render_input(form.login, 'input-xlarge') }}
+            {{ render_input(form.password, 'input-xlarge') }}
+            <div class='clearfix'>
+                <label></label>
+                <div class="input">
+                    {{ form.remember() }}<span class='remember_me'>{{ _('Remember me') }}</span>
+                </div>
+            </div>
+            {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+

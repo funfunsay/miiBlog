@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  {{_("Fun Fun Say")}}
+{% endblock %}
+
+{% block body %}
+<div id="indexbody">
+    <div class="indexblock" id="indexbody1_1">
+    <a href="/m">{{_("Microblog")}}</a>
+    <div class="indexblockhint">{{_('Share your ideas!')}}</div>
+    </div>
+    <div class="indexblock" id="indexbody1_2">
+    <a href="/r">{{_("Repartee")}}</a>
+    <div class="indexblockhint">{{_('Witty repartees!')}}</div>
+    </div>
+    <div class="indexblock" id="indexbody2_1">
+    <a href="/p">{{_("Princilist")}}</a>
+    <div class="indexblockhint">{{_('Construct checklist for you!')}}</div>
+    </div>
+    <div class="indexblock" id="indexbody2_2">
+    <a href="/n">{{_("Notes")}}</a>
+    <div class="indexblockhint">{{_('Note Everything!')}}</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

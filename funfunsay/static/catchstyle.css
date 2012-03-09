@@ -1,0 +1,105 @@
+body {
+  font: normal 85% Verdana, Arial, Helvetica, sans-serif;
+  margin: 0px;
+  padding: 0px;
+  text-align: center; /* centering hack 1/2 */
+}
+
+
+.wrapper
+{
+    border: 0px;
+    background: #fff;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+    text-align: left; /* centering hack 2/2 */
+    width: /*100%*/800px;
+    overflow: hidden;
+}
+
+.liferulecontent
+{
+    padding: 5px;
+}
+
+.liferulecontent textarea
+{
+    width: 100%;
+}
+
+.tagscontainer
+{
+}
+
+.hottesttags
+{
+    float: left;
+    width: 100%;
+    background: transparent;
+    overflow: hidden;
+    position: relative;
+}
+
+.hottesttags ul
+{
+    background: transparent;
+    width: 100%;
+    clear: left;
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    position: relative;
+    left: 0%;
+    text-align: center;
+}
+
+.hottesttags ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:0%;
+}
+
+.hottesttags ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#ddd;
+   color:#000;
+   text-decoration:none;
+   line-height:1.3em;
+}
+.hottesttags ul li a:hover {
+   background:#369;
+   color:#fff;
+}
+.hottesttags ul li a.active,
+.hottesttags ul li a.active:hover {
+   color:#fff;
+   background:#000;
+   font-weight:bold;
+}
+
+.inputtags
+{
+    /*position:relative;*/ /*use relative position will cause <a> unusable*/
+    top: 0px;
+    padding: 5px;
+}
+
+.taginput
+{
+    width: 100%;
+}
+
+.tagit-choice
+{
+    list-style:none;
+}

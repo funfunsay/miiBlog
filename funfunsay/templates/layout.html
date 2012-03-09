@@ -1,0 +1,107 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block title %}Welcome{% endblock %} | FunFunSay</title>
+    <meta name="author" content="Brent Jiang">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    {% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% endblock %}
+</head>
+<body style="padding-top: 40px;" data-spy="scroll" data-target=".subnav" data-offset="50">
+  <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </a><a class='brand' href="{{ url_for('homesite.home') }}">FUNFUNSAY</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="#" id="homeToSubsite">{{_("Home")}}</a></li>
+                        <!--<li><a href="#about">{{_("About")}}</a></li>
+                        <li><a href="#contact">{{_("Contact us")}}</a></li>-->
+                    </ul>
+<!--                    <form class="navbar-search pull-left">
+                        <input type="text" class="search-query" placeholder="Search">
+                    </form>
+-->
+
+                <!--user login control-->
+                    {% if current_user.is_authenticated() %}
+                    <ul class="nav pull-right">
+                        <li class="divider-vertical"/>
+                        <li class="dropdown">
+                            <!--{{_("Logged in as")}}--><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ current_user.name }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('homesite.user_profile') }}">{{_("User Profile")}}</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url_for('homesite.logout') }}">{{_("Logout")}}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="navbar-text pull-right">
+                        {{_("Logged in as")}}</p>
+                    {% elif login_form is defined %}
+                    <form class='navbar-form pull-right' method='POST' action="{{ url_for('homesite.login') }}">
+                        {{ login_form.hidden_tag() }}
+                        {{ login_form.next }}
+                        {{ login_form.login(class_='input-small', placeholder='Username') }}
+                        {{ login_form.password(class_='input-small', placeholder='Password') }}
+                        <button type="submit" class="btn btn-primary btn-small">{{_("Log in")}}</button>
+                    </form>
+                    {% endif %}
+                 <!--/user login control-->
+                                 </div>
+                <!--/.nav-collapse -->
+           </div>
+        </div>
+    </div>
+
+    <!-- Masthead
+    ================================================== -->
+
+    <div class="container">
+        <header class="jumbotron subhead" id="overview">{% block header %}{% endblock %}</header>
+
+        <section id="flashesDisplay">
+            {% with flashes = get_flashed_messages() %} {% if flashes %}
+            <ul class="flashes">
+                {% for message in flashes %}
+                <li>
+                {{ message }} {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+        </section>
+        <section id="bodySection">{% block body %}{% endblock %}</section>
+        <br />
+
+        <footer class="footer">
+            <p class="pull-right"><a href="#">Back to top</a></p>
+            <div class="span8">
+            CopyRights: FunFunSay by Brent Jiang &mdash;sanyi0127@sina.com
+            </div>
+        </footer >
+    </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-collapse.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-dropdown.js') }}"></script>
+    <script type="text/javascript">
+      var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    {% block _script %}
+    {% endblock %}
+    {% block script %}
+    {% endblock %}
+</body>

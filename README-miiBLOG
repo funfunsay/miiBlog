@@ -1,0 +1,57 @@
+
+                        / FunFunSay /
+
+           because writing todo lists is not fun
+
+
+    ~ What is FunFunSay?
+
+      A MongoDB and Flask powered twitter clone
+
+    ~ How do I use it?
+
+      1. edit the configuration in the funfunsay.py file or
+         export an REPARTEE_SETTINGS environment variable
+         pointing to a configuration file.
+
+      2. fire up a python shell and run this:
+
+         >>> from funfunsay import init_db; init_db()
+
+      3. now you can run the funfunsay.py file with your
+         python interpreter and the application will
+         greet you on http://localhost:5000/ 
+
+			Run local server: ::
+
+				$ python shell.py run
+
+			Compile with babel: ::
+    
+				$ python setup.py compile_catalog --directory fbone/translations --locale zh -f
+
+			Install packages: ::
+
+				$ python setup.py install
+
+	
+    ~ Is it tested?
+
+      You betcha.  Run the `funfunsay_tests.py` file to
+      see the tests pass.
+
+
+	~ Setup 
+	
+		目前只支持将数据库安装在d:\mongodb\data\db目录下。NTService依赖于此路径。
+		
+	  1.以管理员方式，运行cmd.exe，安装FirstService服务：用于避免系统异常关闭时mongodb2.0的无法自动启动的问题。
+		"NTService.exe -i"
+	  2.安装MongoDB服务：
+		"D:\mongodb\bin\mongod.exe" --install --dbpath  "d:\MongoDB\data\db"  --logpath  "d:\MongoDB\data\logs\ffs.log"  --directoryperdb 
+	  3.再运行： 
+		"sc config MongoDB depend= FirstService"
+		注意“=”和FirstService中间有个空格，否则命令失败。
+		去掉--logappend。
+		由于安装服务需要管理员权限，所以请以管理员方式运行控制台cmd.exe程序。
+ 
