@@ -1,19 +1,32 @@
-{% extends "microblog/_layout.html" %} {% block title %} {% if request.endpoint==
-'microblog.public_timeline' %} Public Timeline {% elif request.endpoint == 'microblog.user_timeline'%}
-{{ profile_user._id }}'s Timeline {% else %} My Timeline {% endif %} {% endblock%}
+{% extends "microblog/_layout.html" %}
+{% block title %} 
+{% if request.endpoint=='microblog.public_timeline' %} 
+Public Timeline 
+{% elif request.endpoint == 'microblog.user_timeline'%}
+{{ profile_user._id }}'s Timeline 
+{% else %}
+My Timeline 
+{% endif %}
+{% endblock%}
+
+
 {% block body %}
 <h2>
     {{ self.title() }}</h2>
-{% if current_user.is_authenticated() %} {% if request.endpoint == 'user_timeline'
-%}
-<div class="followstatus">
-    {% if current_user.id == profile_user._id %} This is you! {% elif followed %} You
-    are currently following this user. <a class="unfollow" href="{{ url_for('microblog.unfollow_user', username=profile_user._id)
-          }}">Unfollow user</a>. {% else %} You are not yet following this user. <a class="follow"
-              href="{{ url_for('microblog.follow_user', username=profile_user._id)
-          }}">Follow user</a>. {% endif %}
+{% if current_user.is_authenticated() %}
+{% if request.endpoint == 'microblog.user_timeline'%}
+<div class="row">
+    {% if current_user.id == profile_user._id %}
+    This is you!
+    {% elif followed %}
+    You are currently following this user. 
+    <a class="unfollow" href="{{ url_for('microblog.unfollow_user', username=profile_user._id)}}">Unfollow user</a>. 
+    {% else %} 
+    You are not yet following this user. 
+    <a class="follow" href="{{ url_for('microblog.follow_user', username=profile_user._id)}}">Follow user</a>. 
+    {% endif %}
 </div>
-{% elif request.endpoint == 'timeline' %}
+{% elif request.endpoint == 'microblog.timeline' %}
 <div class="twitbox">
     <h3>
         What's on your mind {{ current_user.id }}?</h3>
@@ -106,10 +119,11 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.messages').unbind('click');
         $('.messages').on('click', 'a.reply', function (event) {
             messageid = $(this).attr('data-messageid');
             $(messageid).html('loading');
-            $.getJSON($SCRIPT_ROOT + '/_get_replies', { messageid: messageid.substring(8) }, function (data) {
+            $.getJSON($SCRIPT_ROOT + '/m/_get_replies', { messageid: messageid.substring(8) }, function (data) {
                 $(messageid).html(data.result);
                 $(messageid).slideToggle(0);
             });

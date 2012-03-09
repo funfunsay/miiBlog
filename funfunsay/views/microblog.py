@@ -118,7 +118,7 @@ def follow_user(username):
                     "whom_id":whom_id }
     g.db.followers.insert(follower_doc, safe=True)
     flash('You are now following "%s"' % username)
-    return redirect(url_for('user_timeline', username=username))
+    return redirect(url_for('microblog.user_timeline', username=username))
 
 
 @microblog.route('/<username>/unfollow')
@@ -131,7 +131,7 @@ def unfollow_user(username):
     g.db.followers.remove({"who_id":session['user_id'], 
                            "whom_id":whom_id }, safe=True)
     flash('You are no longer following "%s"' % username)
-    return redirect(url_for('user_timeline', username=username))
+    return redirect(url_for('microblog.user_timeline', username=username))
 
 
 @microblog.route('/add_message', methods=['POST'])
@@ -151,7 +151,7 @@ def add_message():
                        }
         g.db.messages.insert(message_doc)
         flash('Your message was recorded')
-    return redirect(url_for('timeline'))
+    return redirect(url_for('microblog.timeline'))
 
 
 @microblog.route('/reply_message', methods=['POST'])
@@ -170,7 +170,7 @@ def reply_message():
                        }
         g.db.messages.insert(message_doc)
         flash('Your reply was recorded')
-    return redirect(url_for('timeline'))
+    return redirect(url_for('microblog.timeline'))
 
 	
 @microblog.route('/create', methods=['GET', 'POST'])
@@ -197,15 +197,15 @@ def create_media():
             g.db.users.insert(user_doc, safe=True)
             #todo: check fail
             flash('Media creation application was successfully applied and can now to be remarked')
-            return redirect(url_for('media', medianame=request.form['username']))
-    return render_template('create.html', error=error)
+            return redirect(url_for('microblog.media', medianame=request.form['username']))
+    return render_template('microblog/create.html', error=error)
 
 
 @microblog.route('/_get_replies')
 def get_replies():
     messageid = request.args.get('messageid')
     messages = g.db.messages.find({"host_id":messageid}, sort=[("pub_date", pymongo.DESCENDING)]).limit(PER_PAGE)
-    return jsonify(result=jinja2.Markup(render_template("replies_widget.html", replies=messages, hostid=messageid)))
+    return jsonify(result=jinja2.Markup(render_template("microblog/replies_widget.html", replies=messages, hostid=messageid)))
 
 @microblog.route('/m/_get_new_message')
 @login_required

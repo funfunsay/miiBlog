@@ -1,5 +1,5 @@
 <div class="replybox">
-    <form class="replyform" id="replyform{{hostid}}" action="{{ url_for('reply_message') }}"
+    <form class="replyform" id="replyform{{hostid}}" action="{{ url_for('microblog.reply_message') }}"
     method="post">
     <p>
         <textarea class="newreply" id="newreply{{hostid}}" name="text"></textarea>
@@ -12,7 +12,7 @@
         {% for message in replies %}
         <li>
             <img src="{{ g.get_user(message.author_id).email|gravatar(size=48)}}"><p>
-                <strong><a href="{{ url_for('user_timeline', username=message.author_id)
+                <strong><a href="{{ url_for('microblog.user_timeline', username=message.author_id)
     }}">{{ message.author_id }}</a></strong> {{ message.text }} <small>&mdash; {{ message.pub_date|datetimeformat
         }}</small> {% if current_user.is_authenticated() %}
                 <p align="right" style='text-align: right'>
@@ -52,7 +52,7 @@
             var imgsrc = data.imgsrc;
             var div = document.createElement("div");
             div.innerHTML = "<li><img src='" + imgsrc + "'><p> " +
-                    "<strong><a href='{{url_for('user_timeline', username=current_user.id)}}'>{{ current_user.id}}</a></strong>&nbsp; " + $('#newreply' + hostid).val()
+                    "<strong><a href='{{url_for('microblog.user_timeline', username=current_user.id)}}'>{{ current_user.id}}</a></strong>&nbsp; " + $('#newreply' + hostid).val()
                     + "<small>&mdash; " + messagepubdate + "</small><p align='right' style='text-align: right'><small><a href='#' data-messageid='#comments" + messageid + "' class='comment'>Reply</a></small></p><p><br /><div class='comments hidden' id='comments" + messageid + "'></div></p></p></li>";
             //alert('ul#replies'+hostid);
             $('ul#replies' + hostid).prepend(div);
