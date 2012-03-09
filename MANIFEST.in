@@ -1,0 +1,14 @@
+# http://docs.python.org/distutils/sourcedist.html#manifest-template
+# http://docs.python.org/distutils/sourcedist.html#specifying-the-files-to-distribute
+
+# Including
+recursive-include funfunsay/templates *
+recursive-include funfunsay/static *
+recursive-include funfunsay/views *
+recursive-include funfunsay/forms *
+recursive-include funfunsay/models *
+recursive-include funfunsay/translations *
+
+# Excluding
+recursive-exclude funfunsay *.pyc
+recursive-exclude tests *.pyc

@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EACF06BB-FF78-4EAB-883D-89D6565DAC66}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "shell", "shell.pyproj", "{1A71D8EB-52B3-464C-9734-B9EB7D9C3739}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "miiBLOG", "funfunsay\miiBLOG.pyproj", "{6DC45C75-1082-4C5A-9E76-B076E67DA054}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A71D8EB-52B3-464C-9734-B9EB7D9C3739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A71D8EB-52B3-464C-9734-B9EB7D9C3739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DC45C75-1082-4C5A-9E76-B076E67DA054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DC45C75-1082-4C5A-9E76-B076E67DA054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
