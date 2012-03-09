@@ -17,6 +17,7 @@ from flaskext.login import (login_required, login_user, current_user,
 
 from funfunsay.models import User
 from funfunsay.extensions import cache, login_manager
+from funfunsay.config import DefaultConfig, APP_NAME
 
 
 homesite = Blueprint('homesite', __name__
@@ -26,14 +27,16 @@ homesite = Blueprint('homesite', __name__
 
 @homesite.route('/')
 def home():
-    if g.user:
-        return render_template('index.html')
+    print current_app.config['FEATURE']
+    if current_user.is_authenticated():
+        return render_template('microblog/index.html' if current_app.config['FEATURE'] is 1 else 'index.html')
 
     login_form = signup_form = None
-    if not g.user:
+    if not current_user.is_authenticated():
         login_form= LoginForm(next=request.args.get('next'))
         signup_form = SignupForm(nex=request.args.get('next'))
-    return render_template('index.html', login_form=login_form,
+
+    return render_template('microblog/index.html' if current_app.config['FEATURE'] is 1 else 'index.html', login_form=login_form,
                            signup_form=signup_form)
 
 
@@ -43,17 +46,11 @@ def login():
                      next=request.args.get('next', None))
 
     if form.validate_on_submit():
-        #print "111 validate_on_submit: "
         user, authenticated, error = User.authenticate(form.login.data,
                                     form.password.data)
-        #print "111 user: ", user
-        #print "111 authenticated: ", authenticated
-        #print "111 error: ", error
 
         if user and authenticated:
-            #print "111 if: ", request.form.get('remember')
             remember = request.form.get('remember') == 'y'
-            #print "111 remember: ", remember
             if login_user(user, remember=remember):
                 flash("Logged in!", 'success')
                 session['user_id'] = user.id
@@ -61,7 +58,6 @@ def login():
         else:
             flash(_('Sorry, invalid login'), 'error')
 
-    #print "comeljdkj"
     return render_template('login.html', form=form)
 
 

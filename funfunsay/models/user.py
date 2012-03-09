@@ -4,7 +4,7 @@ from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, g, abort)
 from werkzeug import (generate_password_hash, check_password_hash,
                       cached_property)
-from flaskext.login import UserMixin
+from flaskext.login import (UserMixin, login_user, current_user, logout_user)
 import pymongo
 from pymongo.objectid import ObjectId
 
@@ -121,6 +121,12 @@ class User(UserMixin):
         return user
 
     @classmethod
+    def get_user_email(cls, user_id):
+        """Return a user document."""
+        user_doc = g.db.users.find_one({"_id":user_id})
+        return user_doc['email']
+
+    @classmethod
     def get_latest_message(cls, userid):
         return g.db.messages.find_one({"author_id":userid}, sort=[("pub_date", pymongo.DESCENDING)])
 
@@ -129,10 +135,10 @@ class User(UserMixin):
         """
         return 0 if not voted, -1 means vote down, 1 means vote up
         """
-        if g.user is None:
+        if not current_user.is_authenticated():
             return 0
 
-        vote_doc = g.db.votes.find_one({'message_id':messageid, 'user_id':g.user['_id']})
+        vote_doc = g.db.votes.find_one({'message_id':messageid, 'user_id':current_user.id})
         if vote_doc is None:
             return 0
 
@@ -148,19 +154,19 @@ class User(UserMixin):
         """
         #print messageid
         #print voteval
-        if g.user is None:
+        if not current_user.is_authenticated():
             return 0
 
         message_doc = g.db.messages.find_one({'_id':messageid})
 
         # cannot vote self!
-        if g.user['_id'] == message_doc['author_id']:
+        if current_user.id == message_doc['author_id']:
             return 0, int(message_doc['score'])
 
-        vote_doc = g.db.votes.find_one({'message_id':messageid, 'user_id':g.user['_id']})
+        vote_doc = g.db.votes.find_one({'message_id':messageid, 'user_id':current_user.id})
         #print vote_doc
         if vote_doc is None:
-            vote_doc = {'user_id':g.user['_id'],
+            vote_doc = {'user_id':current_user.id,
                         'message_id':messageid,
                         'vote':voteval
                         }

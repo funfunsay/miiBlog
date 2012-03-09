@@ -1,0 +1,18 @@
+{% extends "microblog/_layout.html" %}
+{% block title %}Create Media{% endblock %}
+{% block body %}
+  <h2>Create Media</h2>
+  {% if error %}<div class=error><strong>Error:</strong> {{ error }}</div>{% endif %}
+  <form action="" method=post>
+    <dl>
+      <dt>Title:
+      <dd><input type=text name=username size=30 value="{{ request.form.username }}">
+      <dt>Copyrights:
+      <dd><input type=text name=copyrights size=30>
+      <dt>E-Mail:
+      <dd><input type=text name=email size=30 value="{{ request.form.email }}">
+    </dl>
+    <div class=actions><input type=submit value="Create"></div>
+  </form>
+{% endblock %}
+

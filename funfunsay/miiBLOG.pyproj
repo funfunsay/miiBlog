@@ -25,11 +25,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app.py" />
     <Compile Include="config.py" />
     <Compile Include="extensions.py" />
     <Compile Include="forms\frontend.py" />
     <Compile Include="forms\__init__.py" />
+    <Compile Include="miiblog.py" />
     <Compile Include="models\types.py" />
     <Compile Include="models\user.py" />
     <Compile Include="models\__init__.py" />
@@ -45,6 +45,7 @@
     <Content Include="static\css\bootstrap.css" />
     <Content Include="static\css\bootstrap.min.css" />
     <Content Include="static\css\style.css" />
+    <Content Include="static\img\microblog.png" />
     <Content Include="static\js\bootstrap-carousel.js" />
     <Content Include="static\js\bootstrap-collapse.js" />
     <Content Include="static\js\bootstrap-dropdown.js" />
@@ -64,23 +65,25 @@
     <Content Include="static\vote-arrow-down.png" />
     <Content Include="static\vote-arrow-up-on.png" />
     <Content Include="static\vote-arrow-up.png" />
-    <Content Include="templates\create.html" />
     <Content Include="templates\index.html" />
     <Content Include="templates\layout.html" />
     <Content Include="templates\login.html" />
     <Content Include="templates\macros\_misc.html" />
-    <Content Include="templates\media.html" />
+    <Content Include="templates\microblog\create.html" />
+    <Content Include="templates\microblog\index.html" />
+    <Content Include="templates\microblog\media.html" />
+    <Content Include="templates\microblog\plaza.html" />
+    <Content Include="templates\microblog\replies_widget.html" />
+    <Content Include="templates\microblog\timeline.html" />
     <Content Include="templates\microblog\_layout.html" />
-    <Content Include="templates\plaza.html" />
     <Content Include="templates\register.html" />
-    <Content Include="templates\replies_widget.html" />
     <Content Include="templates\search.html" />
-    <Content Include="templates\timeline.html" />
     <Content Include="templates\uprofile.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models" />
     <Folder Include="forms\" />
+    <Folder Include="static\img\" />
     <Folder Include="translations\" />
     <Folder Include="static\css\" />
     <Folder Include="static\js\" />

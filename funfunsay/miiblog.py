@@ -5,8 +5,7 @@ import os
 import sys
 from datetime import datetime
 
-from hashlib import md5
-from flask import Flask, request, render_template, g, session
+from flask import (Flask, request, current_app, render_template, g, session)
 from flaskext.babel import Babel
 from funfunsay.config import DefaultConfig, APP_NAME
 from funfunsay.views import homesite, microblog
@@ -59,9 +58,9 @@ def query_db(query, args=(), one=False):
 
 def create_app(config=None, app_name=None, blueprints=None):
     """Create a Flask app."""
-
     if app_name is None:
         app_name = APP_NAME
+
     if blueprints is None:
         blueprints = DEFAULT_BLUEPRINTS
 
@@ -79,6 +78,7 @@ def create_app(config=None, app_name=None, blueprints=None):
     app.jinja_env.filters['datetimeformat'] = utils.format_datetime
     app.jinja_env.filters['gravatar'] = utils.gravatar_url
     app.jinja_env.filters['user'] = User.get_user
+    app.jinja_env.filters['user_email'] = User.get_user_email
     app.jinja_env.filters['myvote'] = User.my_vote
     app.jinja_env.filters['scoreformat'] = int
 
@@ -93,8 +93,9 @@ def configure_app(app, config):
     app.config.from_object(DefaultConfig)
     if config is not None:
         app.config.from_object(config)
+    app.config['FEATURE'] = 1
     # Override setting by env var without touching codes.
-    app.config.from_envvar('FUNFUNSAY_CONFIG', silent=True)
+    app.config.from_envvar('MIIBLOG_CONFIG', silent=True)
 
 
 def configure_extensions(app):
@@ -142,10 +143,8 @@ def configure_hook(app):
         up the current user so that we know he's there.
         """
         g.db = connect_db(app)
-        g.user = None
+        #@funfunsay-todo: replace g.user with current_user
         g.MAX_LEN_P = MAX_LEN_P
-        if 'user_id' in session:
-            g.user = User.get_user(session['user_id'])
 
 
     @app.teardown_request

@@ -1,0 +1,46 @@
+{% extends "microblog/_layout.html" %}
+{% block title %}
+    Plaza
+{% endblock %}
+{% block body %}
+  <h2>{{ self.title() }}</h2>
+  <ul class=hottest>
+ 	Hottest Repartees
+ {% for repartee in repartees %}
+    <li><img src="{{ g.get_user(media._id).email|gravatar(size=48) }}"><p>
+      <strong><a href="{{ url_for('microblog.media', medianame=media._id)
+      }}">{{ media._id }}</a></strong>
+      {{ media._id }}
+      <small>&mdash; {{ media.copyrights }}</small>
+  {% else %}
+    <li><em>There's no media so far.</em>
+  {% endfor %}
+  </ul>
+  <ul class=newest>
+ 	Newest Repartees:
+ {% for media in medias %}
+    <li><img src="{{ g.get_user(media._id).email|gravatar(size=48) }}"><p>
+      <strong><a href="{{ url_for('microblog.media', medianame=media._id)
+      }}">{{ media._id }}</a></strong>
+      {{ media._id }}
+      <small>&mdash; {{ media.copyrights }}</small>
+  {% else %}
+    <li><em>There's no media so far.</em>
+  {% endfor %}
+  </ul>
+  <ul class=messages>
+	Latest messages:
+  {% for message in messages %}
+    <li><img src="{{ g.get_user(message.author_id).email|gravatar(size=48) }}"><p>
+      <strong><a href="{{ url_for('microblog.user_timeline', username=message.author_id)
+      }}">{{ message.author_id }}</a></strong>
+      {{ message.text }}
+      <small>&mdash; {{ message.pub_date|datetimeformat }}</small>
+      {% if current_user.is_authenticated() %}
+        <p  align=right style='text-align:right'><small><a href="">Reply</a> &nbsp; <a href="">Forward</a></small></p>
+      {% endif %}
+  {% else %}
+    <li><em>There's no message so far.</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

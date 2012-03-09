@@ -7,6 +7,7 @@ class BaseConfig(object):
 
     DEBUG = False
     TESTING = False
+    FEATURE = 0 #0: funfunsay, 1:miiBlog
 
     # os.urandom(24)
     SECRET_KEY = 'secret key'

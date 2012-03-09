@@ -1,0 +1,163 @@
+{% extends "microblog/_layout.html" %} {% block title %} {% if request.endpoint==
+'microblog.public_timeline' %} Public Timeline {% elif request.endpoint == 'microblog.user_timeline'%}
+{{ profile_user._id }}'s Timeline {% else %} My Timeline {% endif %} {% endblock%}
+{% block body %}
+<h2>
+    {{ self.title() }}</h2>
+{% if current_user.is_authenticated() %} {% if request.endpoint == 'user_timeline'
+%}
+<div class="followstatus">
+    {% if current_user.id == profile_user._id %} This is you! {% elif followed %} You
+    are currently following this user. <a class="unfollow" href="{{ url_for('microblog.unfollow_user', username=profile_user._id)
+          }}">Unfollow user</a>. {% else %} You are not yet following this user. <a class="follow"
+              href="{{ url_for('microblog.follow_user', username=profile_user._id)
+          }}">Follow user</a>. {% endif %}
+</div>
+{% elif request.endpoint == 'timeline' %}
+<div class="twitbox">
+    <h3>
+        What's on your mind {{ current_user.id }}?</h3>
+    <form id="messageForm" action="{{url_for('microblog.add_message')}}" method="post">
+    <p>
+        <textarea id="newMessage" name="text"></textarea><!--
+          --><input type="submit" value="Share" /></p>
+    </form>
+</div>
+{% endif %} {% endif %}
+<ul class="messages" id="messages">
+    {% for message in messages %}
+    <li>
+        <table style="width: 100%">
+            <tbody>
+                <tr>
+                    <td style="width: auto">
+                        <div class="vote">
+                            {% set messagevote=message._id|myvote %} {% if messagevote != 0 %}
+                            <img id="message-img-upvote-{{ message._id }}" class="message-img-upvote" src="/static/vote-arrow-up{% if messagevote==1 %}-on{% endif %}.png"
+                                title="i like this post (click again to cancel)" />
+                            <div id="message-vote-number-{{ message._id }}" class="vote-number" title="current score of votes">
+                                {{ message.score|scoreformat }}
+                            </div>
+                            <img id="message-img-downvote-{{ message._id }}" class="message-img-downvote" src="/static/vote-arrow-down{% if messagevote==-1 %}-on{% endif %}.png"
+                                title="i dont like this post (click again to cancel)" />
+                            {% else %}
+                            <img id="message-img-upvote-{{ message._id }}" class="message-img-upvote" src="/static/vote-arrow-up.png"
+                                title="i like this post (click again to cancel)" />
+                            <div id="message-vote-number-{{ message._id }}" class="vote-number" title="current score of votes">
+                                {{ message.score|scoreformat }}
+                            </div>
+                            <img id="message-img-downvote-{{ message._id }}" class="message-img-downvote" src="/static/vote-arrow-down.png"
+                                title="i dont like this post (click again to cancel)" />
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td style="width: 100%">
+                        <img src="{{ message.author_id|user_email|gravatar(size=48)}}">
+                        <p>
+                            <strong><a href="{{ url_for('microblog.user_timeline', username=message.author_id)}}">
+                                {{ message.author_id}}</a></strong>&nbsp; {{ message.text }}<small>&mdash; {{ message.pub_date|datetimeformat}}</small>
+                            {% if current_user.is_authenticated() %}
+                            <p align="right" style='text-align: right'>
+                                <small><a href="#" data-messageid="#replies{{message._id}}" class="reply">Reply</a></small></p>
+                            {% endif %}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <p>
+                            <br />
+                            <div class="replies hidden" id="replies{{message._id}}">
+                            </div>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    {% else %}
+    <li><em>There's no message so far.</em></li>
+    {% endfor %}
+</ul>
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.form.js') }}"></script>
+<script type="text/javascript">
+    // wait for the DOM to be loaded
+    $(document).ready(function () {
+        $("#messageForm").ajaxForm(function () {
+            // GET NEWEST MESSAGE ID
+            $.getJSON($SCRIPT_ROOT + '/_get_new_message', function (data) {
+                var messageid = data.messageid;
+                var messagepubdate = data.messagepubdate;
+                var imgsrc = data.imgsrc;
+                //alert(messageid); //TESTED! the messageid is the newly added message's _id!
+                var div = document.createElement("div");
+                div.innerHTML = "<li><img src='" + imgsrc + "'><p> " +
+                         "<strong><a href='{{url_for('microblog.user_timeline', username=current_user.id)}}'>{{ current_user.id}}</a></strong>&nbsp; " + $('#newMessage').val()
+                         + "<small>&mdash; " + messagepubdate + "</small><p align='right' style='text-align: right'><small><a href='#' data-messageid='#replies" + messageid + "' class='reply'>Reply</a></small></p><p><br /><div class='replies hidden' id='replies" + messageid + "'></div></p></p></li>";
+                $('ul#messages').prepend(div);
+                $('#newMessage').val('');
+            });
+            return false;
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.messages').on('click', 'a.reply', function (event) {
+            messageid = $(this).attr('data-messageid');
+            $(messageid).html('loading');
+            $.getJSON($SCRIPT_ROOT + '/_get_replies', { messageid: messageid.substring(8) }, function (data) {
+                $(messageid).html(data.result);
+                $(messageid).slideToggle(0);
+            });
+            return false;
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".message-img-upvote").unbind('click');//@faq: this is a work around. but why jQuery trigger twice here if without unbind?
+        $('.message-img-upvote').click(function (evt) {
+            var messageid = $(this).attr("id").substring(19);
+            //alert(messageid);
+            $.getJSON($SCRIPT_ROOT + '/m/_vote', { messageid: messageid, voteval: 1 }, function (data) {
+                if (data.result == 0)
+                    return false;
+                // alert($(this).attr("id"));//will print "undefined"!!!
+                if (data.voteresult == 0) {
+                    //the first lines ensure image reload
+                    //var d = new Date();
+                    //$("#message-img-upvote-" + messageid).attr("src", "/static/vote-arrow-up.png?timestamp=" + d.getTime()); // without removeAttr("src")
+                    //$("#message-img-downvote-" + messageid).removeAttr("src").attr("src", "/static/vote-arrow-down.png?timestamp=" + d.getTime());
+                    $("#message-img-upvote-" + messageid).attr("src", "/static/vote-arrow-up.png");
+                    $("#message-img-downvote-" + messageid).attr("src", "/static/vote-arrow-down.png");
+                } else if (data.voteresult == 1) {
+                    $("#message-img-upvote-" + messageid).attr("src", "/static/vote-arrow-up-on.png");
+                    $("#message-img-downvote-" + messageid).attr("src", "/static/vote-arrow-down.png");
+                }
+                $("#message-vote-number-" + messageid).html(data.score);
+            });
+        });
+        $(".message-img-downvote").unbind('click');
+        $('.message-img-downvote').click(function (evt) {
+            var messageid = $(this).attr("id").substring(21);
+            //alert(messageid);
+            $.getJSON($SCRIPT_ROOT + '/m/_vote', { messageid: messageid, voteval: -1 }, function (data) {
+                if (data.result == 0)
+                    return false;
+                if (data.voteresult == 0) {
+                    $("#message-img-upvote-" + messageid).attr("src", "/static/vote-arrow-up.png");
+                    $("#message-img-downvote-" + messageid).attr("src", "/static/vote-arrow-down.png");
+                } else if (data.voteresult == -1) {
+                    $("#message-img-upvote-" + messageid).attr("src", "/static/vote-arrow-up.png");
+                    $("#message-img-downvote-" + messageid).attr("src", "/static/vote-arrow-down-on.png");
+                }
+                $("#message-vote-number-" + messageid).html(data.score);
+            });
+        });
+    });
+</script>
+{% endblock %} {% endblock %} 

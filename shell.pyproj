@@ -29,6 +29,7 @@
     <Content Include="MANIFEST.in" />
     <Content Include="miiblog.fcgi" />
     <Content Include="miiblog.wsgi" />
+    <Content Include="README" />
     <Content Include="README-miiBLOG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

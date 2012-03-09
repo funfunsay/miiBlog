@@ -4,6 +4,7 @@
 """
 
 from datetime import datetime
+from hashlib import md5
 
 
 VARCHAR_LEN_128 = 128
